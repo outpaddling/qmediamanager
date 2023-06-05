@@ -46,6 +46,7 @@ int     QShell::fm(void)
 	}
     }
     
+    // FIXME: Use fork() and exec()
     snprintf(cmd, CMD_MAX + 1, "%s %s", fm, mount_point);
     
     return system(cmd);
@@ -57,6 +58,7 @@ void    QShell::unmount(void)
 {
     char    cmd[CMD_MAX + 1];
     
+    // FIXME: Use fork() and exec()
     snprintf(cmd, CMD_MAX + 1, "npmount umount %s", mount_point);
     system(cmd);
     exit(EX_OK);
@@ -71,11 +73,4 @@ int     QShell::reformat(void)
     msgBox.exec();
     
     return system("echo Reformat not yet implemented.");
-}
-
-
-int     QShell::minimize(void)
-
-{
-    return system("echo Minimize not yet implemented.");
 }

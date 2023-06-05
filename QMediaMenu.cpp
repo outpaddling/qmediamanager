@@ -2,10 +2,10 @@
 #include <QPushButton>
 #include <QVBoxLayout>
 #include <QCloseEvent>
-#include <QMessageBox>
 #include <sysexits.h>
 #include "QShell.h"
 #include "QMediaMenu.h"
+#include "popup.h"
 
 #define UNMOUNT_TEXT_MAX    64
 
@@ -56,10 +56,7 @@ QMediaMenu::QMediaMenu( int argc, char *argv[], QWidget *parent  ) : QWidget(par
 void QMediaMenu::closeEvent(QCloseEvent *event)
 
 {
-    QMessageBox msgBox;
-    msgBox.setText("Use Unmount to unmount and close this window.");
-    msgBox.exec();
-    
+    popup("Use Unmount to unmount and close this window.");
     event->ignore();
 }
 

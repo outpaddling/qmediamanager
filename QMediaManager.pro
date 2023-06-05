@@ -15,5 +15,5 @@ INCLUDEPATH += .
 
 # Input
 HEADERS += QMediaMenu.h QShell.h
-SOURCES += main.cpp QMediaMenu.cpp QShell.cpp
+SOURCES += main.cpp QMediaMenu.cpp QShell.cpp popup.cpp
 QT += widgets

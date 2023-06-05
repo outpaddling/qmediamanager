@@ -1,13 +1,13 @@
 #include <iostream>
-#include <QMessageBox>
 #include <stdlib.h>
 #include <sysexits.h>
 #include <sys/stat.h>
 #include <unistd.h>     // fork()
 #include <sys/wait.h>
 #include "QShell.h"
+#include "popup.h"
 
-#define CMD_MAX 256
+#define MSG_MAX 256
 #define PREFIX  "/usr/local"
 
 using namespace std;
@@ -30,7 +30,8 @@ int     QShell::fm(void)
 			  "caja", "dolphin", "lumina-fm", "konqueror",
 			  "krusader", "nautilus", "nemo", "thunar", "" },
 	    *fm,
-	    path[PATH_MAX + 1];
+	    path[PATH_MAX + 1],
+	    message[MSG_MAX + 1];
     int     c, status;
     struct stat     st;
     
@@ -51,20 +52,22 @@ int     QShell::fm(void)
     {
 	execlp(fm, fm, mount_point, NULL);
 	
-	// FIXME: popup message
-	fprintf(stderr, "qmediamanager: exec failed: %s\n", strerror(errno));
+	snprintf(message, MSG_MAX + 1,
+		 "qmediamanager: exec failed: %s\n", strerror(errno));
+	popup(message);
 	return EX_SOFTWARE;
     }
     else
     {
 	wait(&status);
-	// FIXME: popup message
-	fprintf(stderr, "qmediamanager: File manager error: %s\n", strerror(errno));
+	if ( status != 0 )
+	{
+	    snprintf(message, MSG_MAX + 1,
+		     "qmediamanager: File manager error: %s\n", strerror(errno));
+	    popup(message);
+	}
 	return status;
     }
-    // FIXME: Use fork() and exec()
-    // snprintf(cmd, CMD_MAX + 1, "%s %s", fm, mount_point);
-    // return system(cmd);
 }
 
 
@@ -72,25 +75,27 @@ void    QShell::unmount(void)
 
 {
     int     status;
+    char    message[MSG_MAX + 1];
     
-    // char    cmd[CMD_MAX + 1];
-    
-    // FIXME: Use fork() and exec()
     if ( fork() == 0 )
     {
 	execlp("npmount", "npmount", "umount", mount_point, NULL);
-
-	// FIXME: Popup message unmount failed
-	fprintf(stderr, "qmediamanager: exec failed: %s\n", strerror(errno));
+	
+	// execlp() should not return
+	snprintf(message, MSG_MAX + 1,
+		 "qmediamanager: exec failed: %s\n", strerror(errno));
+	popup(message);
     }
     else
     {
 	wait(&status);
+	printf("umount status = %d\n", status);
 	if ( status == 0 )
 	    exit(EX_OK);
 	
-	// FIXME: Popup message unmount failed
-	fprintf(stderr, "qmediamanager: unmount failed: %s\n", strerror(errno));
+	snprintf(message, MSG_MAX + 1,
+		 "qmediamanager: unmount failed: %s\n", strerror(errno));
+	popup(message);
     }
 }
 
@@ -98,9 +103,7 @@ void    QShell::unmount(void)
 int     QShell::reformat(void)
 
 {
-    QMessageBox msgBox;
-    msgBox.setText("Reformat is not yet implemented.");
-    msgBox.exec();
+    popup("Reformat is not yet implemented.");
     
-    return system("echo Reformat not yet implemented.");
+    return EX_OK;
 }

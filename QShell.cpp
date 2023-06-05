@@ -1,26 +1,50 @@
 #include <iostream>
 #include <stdlib.h>
+#include <sysexits.h>
 #include "QShell.h"
+
+#define CMD_MAX 256
 
 using namespace std;
 
 
-int     QShell::mount(void)
+void    QShell::setMount_point(char *new_mount_point)
 
 {
-    return system("echo Mount clicked."); 
+    mount_point = new_mount_point;
 }
 
 
-int     QShell::unmount(void)
+int     QShell::fm(void)
 
 {
-    return system("echo Unmount clicked.");
+    char    cmd[CMD_MAX + 1];
+    
+    snprintf(cmd, CMD_MAX + 1, "lumina-fm %s", mount_point);
+    return system(cmd);
 }
 
 
-int     QShell::format(void)
+void    QShell::unmount(void)
 
 {
-    return system("echo Format clicked.");
+    char    cmd[CMD_MAX + 1];
+    
+    snprintf(cmd, CMD_MAX + 1, "npmount umount %s", mount_point);
+    system(cmd);
+    exit(EX_OK);
+}
+
+
+int     QShell::reformat(void)
+
+{
+    return system("echo Reformat not yet implemented.");
+}
+
+
+int     QShell::minimize(void)
+
+{
+    return system("echo Minimize not yet implemented.");
 }

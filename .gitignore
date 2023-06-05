@@ -1,0 +1,4 @@
+.*.bak
+.qmake.stash
+QMediaManager
+Makefile

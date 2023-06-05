@@ -78,7 +78,7 @@ void    QShell::unmount(void)
     // FIXME: Use fork() and exec()
     if ( fork() == 0 )
     {
-	execlp("npmount", "npmount", mount_point, NULL);
+	execlp("npmount", "npmount", "umount", mount_point, NULL);
 
 	// FIXME: Popup message unmount failed
 	fprintf(stderr, "qmediamanager: exec failed: %s\n", strerror(errno));

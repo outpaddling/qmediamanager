@@ -3,7 +3,7 @@
 ######################################################################
 
 TEMPLATE = app
-TARGET = QMediaManager
+TARGET = qmediamanager
 INCLUDEPATH += .
 
 # You can make your code fail to compile if you use deprecated APIs.

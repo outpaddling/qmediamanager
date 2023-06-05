@@ -1,0 +1,57 @@
+.TH qmediamanager 1
+.SH NAME    \" Section header
+.PP
+
+qmediamanager - GUI app for managing removable media
+
+\" Convention:
+\" Underline anything that is typed verbatim - commands, etc.
+.SH SYNOPSIS
+.PP
+.nf 
+.na 
+[env QMEDIA_FM=command] qmediamanager /mount/point
+.ad
+.fi
+
+.SH "PURPOSE"
+
+.B QMediaManager
+is a GUI application for managing removable media.  It is meant to be
+launched by an automount service to provide the user options when
+removable media are inserted.
+
+.SH "DESCRIPTION"
+
+.B QMediaManager
+presents the user 3 options:
+
+Launch file manager: Launches the file manager indicated by the
+environment variable QMEDIA_FM if defined, or if not defined, searches
+for common file managers and chooses the first one discovered.
+The mount point is provided as a command-line argument to the file
+manager, e.g. "lumina-fm /media/cd1".
+
+Unmount: Unmounts the mount point associated with the window using
+"npmount umount /mount/point".  See npmount(1) for more information.
+
+Reformat: Reformats the media with the user-selected filesystem.
+
+.SH ENVIRONMENT
+.nf
+.na
+QMEDIA_FM   File manager command to override default
+.ad
+.fi
+
+.SH "SEE ALSO"
+npmount(1), mount(1), umount(1)
+
+.SH BUGS
+Please report bugs to the author and send patches in unified diff format.
+(man diff for more information)
+
+.SH AUTHOR
+.nf
+.na
+J. Bacon

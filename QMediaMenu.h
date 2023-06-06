@@ -8,7 +8,7 @@ class QMediaMenu : public QWidget
     Q_OBJECT
 
 public:
-    QMediaMenu( int argc = 0, char *argv[] = NULL, QWidget *parent = 0 );
+    QMediaMenu( char *argv[] = NULL, QWidget *parent = 0 );
 
 protected:
     void closeEvent (QCloseEvent *event);

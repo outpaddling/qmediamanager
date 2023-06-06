@@ -14,6 +14,6 @@ INCLUDEPATH += .
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 # Input
-HEADERS += QMediaMenu.h QShell.h
-SOURCES += main.cpp QMediaMenu.cpp QShell.cpp popup.cpp
+HEADERS += QMediaMenu.h QShell.h QFormatMenu.h
+SOURCES += main.cpp QMediaMenu.cpp QShell.cpp QFormatMenu.cpp popup.cpp
 QT += widgets

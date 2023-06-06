@@ -5,9 +5,9 @@
 #include <unistd.h>     // fork()
 #include <sys/wait.h>
 #include "QShell.h"
+#include "QFormatMenu.h"
 #include "popup.h"
 
-#define MSG_MAX 256
 #define PREFIX  "/usr/local"
 
 using namespace std;
@@ -31,7 +31,7 @@ int     QShell::fm(void)
 			  "krusader", "nautilus", "nemo", "thunar", "" },
 	    *fm,
 	    path[PATH_MAX + 1],
-	    message[MSG_MAX + 1];
+	    message[POPUP_MSG_MAX + 1];
     int     c, status;
     struct stat     st;
     
@@ -52,7 +52,7 @@ int     QShell::fm(void)
     {
 	execlp(fm, fm, mount_point, NULL);
 	
-	snprintf(message, MSG_MAX + 1,
+	snprintf(message, POPUP_MSG_MAX + 1,
 		 "qmediamanager: exec failed: %s\n", strerror(errno));
 	popup(message);
 	return EX_SOFTWARE;
@@ -62,7 +62,7 @@ int     QShell::fm(void)
 	wait(&status);
 	if ( status != 0 )
 	{
-	    snprintf(message, MSG_MAX + 1,
+	    snprintf(message, POPUP_MSG_MAX + 1,
 		     "qmediamanager: File manager error: %s\n", strerror(errno));
 	    popup(message);
 	}
@@ -75,14 +75,14 @@ void    QShell::unmount(void)
 
 {
     int     status;
-    char    message[MSG_MAX + 1];
+    char    message[POPUP_MSG_MAX + 1];
     
     if ( fork() == 0 )
     {
 	execlp("npmount", "npmount", "umount", mount_point, NULL);
 	
 	// execlp() should not return
-	snprintf(message, MSG_MAX + 1,
+	snprintf(message, POPUP_MSG_MAX + 1,
 		 "qmediamanager: exec failed: %s\n", strerror(errno));
 	popup(message);
     }
@@ -93,7 +93,7 @@ void    QShell::unmount(void)
 	if ( status == 0 )
 	    exit(EX_OK);
 	
-	snprintf(message, MSG_MAX + 1,
+	snprintf(message, POPUP_MSG_MAX + 1,
 		 "qmediamanager: unmount failed: %s\n", strerror(errno));
 	popup(message);
     }
@@ -103,7 +103,10 @@ void    QShell::unmount(void)
 int     QShell::reformat(void)
 
 {
-    popup("Reformat is not yet implemented.");
-    
+    // popup("Reformat is not yet implemented.");
+
+    QFormatMenu *menu = new QFormatMenu(mount_point);
+    menu->show();
+
     return EX_OK;
 }

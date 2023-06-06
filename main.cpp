@@ -1,26 +1,27 @@
 #include <QApplication>
+#include <stdlib.h>
+#include <sysexits.h>
 
 #include "QMediaMenu.h"
+
+void    usage(char *argv[])
+
+{
+    // FIXME: Display error popup window
+    fprintf(stderr, "Usage: %s /mount/point\n", argv[0]);
+    exit(EX_USAGE);
+}
+
 
 int     main(int argc, char *argv[])
 
 {
-    /* Debug
-    int     c;
-    FILE    *fp;
-    
-    fp = fopen("/home/bacon/argv", "a");
-    for (c = 0; c < argc; ++c)
-	fprintf(fp, "%s\n", argv[c]);
-    fclose(fp);
-    */
-    
     QApplication app(argc, argv);
     
-    QMediaMenu *menu = new QMediaMenu(argc, argv);
-    menu->setAttribute(Qt::WA_QuitOnClose);
+    if ( argc != 2 )
+	usage(argv);
     
-    // FIXME: Don't allow closing while device is mounted
+    QMediaMenu *menu = new QMediaMenu(argv);
     menu->show();
     
     return app.exec();

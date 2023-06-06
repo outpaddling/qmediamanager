@@ -110,7 +110,10 @@ void    QFormatMenu::format(const char *fs_type)
 	    if ( status != 0 )
 		popup("Format failed.");
 	    else
+	    {
+		popup("Format complete.\nDisconnect and reconnect to mount.\n");
 		exit(EX_OK);
+	    }
 	}
     }
     else

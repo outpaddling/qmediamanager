@@ -13,6 +13,7 @@ public:
 private slots:
     void    exfat(void);
     void    ufs2(void);
+    void    ext4(void);
 
 private:
     char    *mount_point;

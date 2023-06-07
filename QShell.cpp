@@ -26,20 +26,43 @@ int     QShell::fm(void)
 			  "caja", "dolphin", "lumina-fm", "konqueror",
 			  "krusader", "nautilus", "nemo", "thunar", "" },
 	    *fm,
+	    fm_array[PATH_MAX + 1],
 	    path[PATH_MAX + 1],
+	    home_dir[PATH_MAX + 1],
 	    message[POPUP_MSG_MAX + 1];
     int     c, status;
+    FILE    *fp;
     struct stat     st;
     
     if ( (fm = getenv("QMEDIA_FM")) == NULL )
     {
-	for (c = 0; fms[c][0] != '\0'; ++c)
+	if ( get_home_dir(home_dir, PATH_MAX + 1) == NULL )
 	{
-	    snprintf(path, PATH_MAX + 1, "%s/bin/%s", PREFIX, fms[c]);
-	    if ( stat(path, &st) == 0 )
+	    popup("Failed to get home directory.");
+	    exit(EX_SOFTWARE);
+	}
+	snprintf(path, PATH_MAX + 1, "%s/.config/qmediamanager", home_dir);
+	if ( (fp = fopen(path, "r")) != NULL )
+	{
+	    if ( fgets(fm_array, PATH_MAX, fp) != NULL )
 	    {
-		fm = fms[c];
-		break;
+		fm = fm_array;
+		fm[strlen(fm)-1] = '\0';
+	    }
+	    else
+		popup(".config/qmediamanager exists, but is empty.");
+	    fclose(fp);
+	}
+	else
+	{
+	    for (c = 0; fms[c][0] != '\0'; ++c)
+	    {
+		snprintf(path, PATH_MAX + 1, "%s/bin/%s", PREFIX, fms[c]);
+		if ( stat(path, &st) == 0 )
+		{
+		    fm = fms[c];
+		    break;
+		}
 	    }
 	}
     }

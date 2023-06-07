@@ -15,5 +15,6 @@ INCLUDEPATH += .
 
 # Input
 HEADERS += QMediaMenu.h QShell.h QFormatMenu.h
-SOURCES += main.cpp QMediaMenu.cpp QShell.cpp QFormatMenu.cpp popup.cpp
+SOURCES += main.cpp QMediaMenu.cpp QShell.cpp QFormatMenu.cpp misc.cpp
 QT += widgets
+QMAKE_LIBS += "-lxtend"

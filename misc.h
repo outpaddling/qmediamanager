@@ -7,4 +7,5 @@
 enum { UMOUNT_OK, UMOUNT_FAILED };
 
 void    popup(const char *message);
+char   *get_home_dir(char *dir, size_t maxlen);
 

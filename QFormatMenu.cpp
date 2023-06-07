@@ -5,11 +5,12 @@
 #include <sys/wait.h>
 #include <sys/param.h>      // statfs()
 #include <sys/mount.h>      // "
+#include <sys/stat.h>
 #include <sysexits.h>
 #include "QFormatMenu.h"
 #include "popup.h"
 
-enum { OK, FAILED };
+enum { UMOUNT_OK, UMOUNT_FAILED };
 
 QFormatMenu::QFormatMenu( char *new_mount_point, QWidget *parent  ) : QWidget(parent)
 
@@ -59,18 +60,22 @@ int     QFormatMenu::umount(void)
 	snprintf(message, POPUP_MSG_MAX + 1,
 		 "qmediamanager: exec failed: %s\n", strerror(errno));
 	popup(message);
-	return FAILED;
+	return UMOUNT_FAILED;
     }
     else
     {
 	wait(&status);
-	printf("umount status = %d\n", status);
-	return OK;
+	// popup() causes hang here ??
+	//snprintf(message, POPUP_MSG_MAX + 1,
+	//         "umount status = %d\n", status);
+	//popup(message);
+	if ( status == 0 )
+	    return UMOUNT_OK;
 	
 	snprintf(message, POPUP_MSG_MAX + 1,
 		 "qmediamanager: unmount failed: %s\n", strerror(errno));
 	popup(message);
-	return FAILED;
+	return UMOUNT_FAILED;
     }
 }
 
@@ -81,22 +86,33 @@ void    QFormatMenu::format(const char *fs_type)
     struct statfs   fs;
     char            message[POPUP_MSG_MAX + 1], *p;
     int             status;
+    char            temp_file[PATH_MAX + 1] = "/tmp/qmed.XXXXXXX";
+    struct stat     st;
     
     if ( statfs(mount_point, &fs) == 0 )
     {
+	device = fs.f_mntfromname;
+	
 	// Remove partition such as "p1" or "s1"
-	for (p = fs.f_mntfromname; !isdigit(*p) && *p != '\0'; ++p)
+	for (p = device; !isdigit(*p) && *p != '\0'; ++p)
 	    ;
 	while ( isdigit(*p) )
 	    ++p;
 	*p = '\0';
 	
+	if ( mktemp(temp_file) == NULL )
+	{
+	    popup("Error generating temp file name.");
+	    exit(EX_SOFTWARE);
+	}
+	
 	if ( fork() == 0 )
 	{
-	    if ( umount() == OK )
+	    if ( umount() == UMOUNT_OK )
 	    {
 		execlp("urxvt", "urxvt", "-e", "auto-media-format",
-			fs.f_mntfromname, fs_type, NULL);
+			"--temp-file", temp_file,
+			device, fs_type, NULL);
 	
 		// execlp() should not return
 		popup("exec failed.");
@@ -108,11 +124,16 @@ void    QFormatMenu::format(const char *fs_type)
 	{
 	    // FIXME: urxvt, xterm do not pass back exit status
 	    wait(&status);
-	    if ( status != 0 )
+	    if ( stat(temp_file, &st) != 0 )
+	    {
 		popup("Format failed.");
+		exit(EX_UNAVAILABLE);
+	    }
 	    else
 	    {
-		popup("Format complete.\nDisconnect and reconnect to mount.\n");
+		popup("Format complete.  Disconnect and reconnect\n"
+		      "the device to mount the new filesystem.");
+		unlink(temp_file);
 		exit(EX_OK);
 	    }
 	}

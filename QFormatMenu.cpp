@@ -8,9 +8,8 @@
 #include <sys/stat.h>
 #include <sysexits.h>
 #include "QFormatMenu.h"
-#include "popup.h"
+#include "misc.h"
 
-enum { UMOUNT_OK, UMOUNT_FAILED };
 
 QFormatMenu::QFormatMenu( char *new_mount_point, QWidget *parent  ) : QWidget(parent)
 
@@ -97,6 +96,7 @@ void    QFormatMenu::format(const char *fs_type)
     char            message[POPUP_MSG_MAX + 1], *p;
     int             status;
     char            temp_file[PATH_MAX + 1] = "/tmp/qmed.XXXXXXX";
+    char            cmd[CMD_MAX + 1];
     struct stat     st;
     
     if ( statfs(mount_point, &fs) == 0 )
@@ -104,12 +104,16 @@ void    QFormatMenu::format(const char *fs_type)
 	device = fs.f_mntfromname;
 	
 	// FIXME: This is a fragile hack that depends on the syntax of the
-	// lklfuse command
+	// lklfuse command.  Is there a better way to get the device name
+	// behind lklfuse?
 	if ( strcmp(device, "lklfuse") == 0 )
 	{
 	    FILE    *fp;
 	    
-	    fp = popen("ps axww | grep 'lklfuse.*/media/da1p1' | grep -v grep | awk '{ print $(NF-1) }'", "r");
+	    snprintf(cmd, CMD_MAX + 1, 
+		    "ps axww | grep 'lklfuse.*%s' | grep -v grep | awk '{ print $(NF-1) }'",
+		    mount_point);
+	    fp = popen(cmd, "r");
 	    if ( fp == NULL )
 	    {
 		popup("Cannot determine lklfuse device name.");

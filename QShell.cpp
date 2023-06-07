@@ -6,11 +6,7 @@
 #include <sys/wait.h>
 #include "QShell.h"
 #include "QFormatMenu.h"
-#include "popup.h"
-
-#define PREFIX  "/usr/local"
-
-using namespace std;
+#include "misc.h"
 
 
 void    QShell::setMount_point(char *new_mount_point)

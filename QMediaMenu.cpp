@@ -5,9 +5,7 @@
 #include <sysexits.h>
 #include "QShell.h"
 #include "QMediaMenu.h"
-#include "popup.h"
-
-#define UNMOUNT_TEXT_MAX    64
+#include "misc.h"
 
 
 QMediaMenu::QMediaMenu( char *argv[], QWidget *parent  ) : QWidget(parent)

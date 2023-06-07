@@ -106,6 +106,7 @@ void    QFormatMenu::format(const char *fs_type)
 	}
 	else
 	{
+	    // FIXME: urxvt, xterm do not pass back exit status
 	    wait(&status);
 	    if ( status != 0 )
 		popup("Format failed.");

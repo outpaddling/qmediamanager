@@ -18,18 +18,21 @@ QMediaMenu::QMediaMenu( char *argv[], QWidget *parent  ) : QWidget(parent)
     
     QPushButton *fm = new QPushButton("Open file manager", this),
 		*unmount = new QPushButton(unmount_text, this),
-		*reformat = new QPushButton("Reformat device", this);
+		*reformat = new QPushButton("Reformat device", this),
+		*info = new QPushButton("Filesystem info", this);
     QShell      *shell = new QShell;
 
     shell->setMount_point(mount_point);
     connect(fm, SIGNAL(clicked()), shell, SLOT(fm()));
     connect(unmount, SIGNAL(clicked()), shell, SLOT(unmount()));
     connect(reformat, SIGNAL(clicked()), shell, SLOT(reformat()));
+    connect(info, SIGNAL(clicked()), shell, SLOT(info()));
     
     QVBoxLayout *layout = new QVBoxLayout;
     layout->addWidget(fm);
     layout->addWidget(unmount);
     layout->addWidget(reformat);
+    layout->addWidget(info);
     setLayout(layout);
 }
 

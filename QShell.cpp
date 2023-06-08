@@ -4,7 +4,10 @@
 #include <sys/stat.h>
 #include <unistd.h>     // fork()
 #include <sys/wait.h>
+#include <sys/param.h>  // statfs()
+#include <sys/mount.h>  // "
 #include <xtend/proc.h> // xt_get_home_dir()
+#include <inttypes.h>   // PRIu64
 #include "QShell.h"
 #include "QFormatMenu.h"
 #include "misc.h"
@@ -129,4 +132,32 @@ int     QShell::reformat(void)
     menu->show();
 
     return EX_OK;
+}
+
+
+void    QShell::info(void)
+
+{
+    struct statfs   fs;
+    char            message[POPUP_MSG_MAX + 1];
+    
+    if ( statfs(mount_point, &fs) == 0 )
+    {
+	snprintf(message, POPUP_MSG_MAX + 1,
+		 "Mount point:\t%s\n"
+		 "Filesystem:\t%s\n"
+		 "Device:\t%s\n"
+		 "Total:\t%" PRIu64 " GB\n"
+		 "Used:\t%" PRIu64 " GB\n"
+		 "Available:\t%" PRId64 " GB",
+		 fs.f_mntonname,
+		 fs.f_fstypename,
+		 fs.f_mntfromname,
+		 fs.f_blocks * fs.f_bsize / 1000000000,
+		 (fs.f_blocks - fs.f_bfree) * fs.f_bsize / 1000000000,
+		 fs.f_bavail * fs.f_bsize / 1000000000 );
+	popup(message);
+    }
+    else
+	popup("Cannot get filesystem info.");
 }

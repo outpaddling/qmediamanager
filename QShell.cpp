@@ -4,6 +4,7 @@
 #include <sys/stat.h>
 #include <unistd.h>     // fork()
 #include <sys/wait.h>
+#include <xtend/proc.h> // xt_get_home_dir()
 #include "QShell.h"
 #include "QFormatMenu.h"
 #include "misc.h"
@@ -36,7 +37,7 @@ int     QShell::fm(void)
     
     if ( (fm = getenv("QMEDIA_FM")) == NULL )
     {
-	if ( get_home_dir(home_dir, PATH_MAX + 1) == NULL )
+	if ( xt_get_home_dir(home_dir, PATH_MAX + 1) == NULL )
 	{
 	    popup("Failed to get home directory.");
 	    exit(EX_SOFTWARE);

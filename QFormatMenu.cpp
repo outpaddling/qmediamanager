@@ -7,7 +7,7 @@
 #include <sys/mount.h>      // "
 #include <sys/stat.h>
 #include <sysexits.h>
-#include "QFormatMenu.h"
+#include "QFormatMenu.hpp"
 #include "misc.h"
 
 

@@ -8,8 +8,8 @@
 #include <sys/mount.h>  // "
 #include <xtend/proc.h> // xt_get_home_dir()
 #include <inttypes.h>   // PRIu64
-#include "QShell.h"
-#include "QFormatMenu.h"
+#include "QShell.hpp"
+#include "QFormatMenu.hpp"
 #include "misc.h"
 
 

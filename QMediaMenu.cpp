@@ -3,8 +3,8 @@
 #include <QVBoxLayout>
 #include <QCloseEvent>
 #include <sysexits.h>
-#include "QShell.h"
-#include "QMediaMenu.h"
+#include "QShell.hpp"
+#include "QMediaMenu.hpp"
 #include "misc.h"
 
 

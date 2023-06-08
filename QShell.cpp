@@ -147,15 +147,18 @@ void    QShell::info(void)
 		 "Mount point:\t%s\n"
 		 "Filesystem:\t%s\n"
 		 "Device:\t%s\n"
-		 "Total:\t%" PRIu64 " GB\n"
-		 "Used:\t%" PRIu64 " GB\n"
-		 "Available:\t%" PRId64 " GB",
+		 "Total:\t%10.2f GB  (%10.2f GiB)\n"
+		 "Used:\t%10.2f GB  (%10.2f GiB)\n"
+		 "Available:\t%10.2f GB  (%10.2f GiB)",
 		 fs.f_mntonname,
 		 fs.f_fstypename,
 		 fs.f_mntfromname,
-		 fs.f_blocks * fs.f_bsize / 1000000000,
-		 (fs.f_blocks - fs.f_bfree) * fs.f_bsize / 1000000000,
-		 fs.f_bavail * fs.f_bsize / 1000000000 );
+		 fs.f_blocks * fs.f_bsize / 1000000000.0,
+		 fs.f_blocks * fs.f_bsize / GIB,
+		 (fs.f_blocks - fs.f_bfree) * fs.f_bsize / 1000000000.0,
+		 (fs.f_blocks - fs.f_bfree) * fs.f_bsize / GIB,
+		 fs.f_bavail * fs.f_bsize / 1000000000.0,
+		 fs.f_bavail * fs.f_bsize / GIB );
 	popup(message);
     }
     else

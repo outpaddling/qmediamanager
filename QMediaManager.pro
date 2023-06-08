@@ -18,3 +18,18 @@ HEADERS += QMediaMenu.h QShell.h QFormatMenu.h
 SOURCES += main.cpp QMediaMenu.cpp QShell.cpp QFormatMenu.cpp misc.cpp
 QT += widgets
 QMAKE_LIBS += "-lxtend"
+
+# This seems to be the only way to prevent qmake from trying to strip
+# everything, whether or not it's a binary
+QMAKE_STRIP = ""
+
+# FIXME: Create overridable DESTDIR and PREFIX so we can use this
+# install target from package managers
+
+bin.path = ../local/bin
+bin.files += qmediamanager
+
+man.path = ../local/man/man1
+man.files += Man/qmediamanager.1
+
+INSTALLS += bin man

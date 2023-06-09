@@ -2,3 +2,5 @@
 .qmake.stash
 qmediamanager
 Makefile
+*.o
+moc_*

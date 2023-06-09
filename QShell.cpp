@@ -112,12 +112,14 @@ void    QShell::unmount(void)
     else
     {
 	wait(&status);
-	printf("umount status = %d\n", status);
 	if ( status == 0 )
 	    exit(EX_OK);
 	
 	snprintf(message, POPUP_MSG_MAX + 1,
-		 "qmediamanager: unmount failed: %s\n", strerror(errno));
+		 "Unmount failed for %s.\n"
+		 "Was the device improperly removed before unmounting?\n"
+		 "Run \"pkill qmediamanager\" to force termination.\n",
+		 mount_point);
 	popup(message);
     }
 }

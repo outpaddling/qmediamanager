@@ -3,10 +3,9 @@
 #include <QCloseEvent>
 #include <unistd.h>         // fork()
 #include <sys/wait.h>
-#include <sys/param.h>      // statfs()
-#include <sys/mount.h>      // "
 #include <sys/stat.h>
 #include <sysexits.h>
+#include "statfs.h"
 #include "QFormatMenu.hpp"
 #include "misc.h"
 
@@ -92,14 +91,14 @@ int     QFormatMenu::umount(void)
 void    QFormatMenu::format(const char *fs_type)
 
 {
-    struct statfs   fs;
+    statfs_t        fs;
     char            message[POPUP_MSG_MAX + 1], *p;
     int             status;
     char            temp_file[PATH_MAX + 1] = "/tmp/qmed.XXXXXXX";
     char            cmd[CMD_MAX + 1];
     struct stat     st;
     
-    if ( statfs(mount_point, &fs) == 0 )
+    if ( STATFS(mount_point, &fs) == 0 )
     {
 	device = fs.f_mntfromname;
 	

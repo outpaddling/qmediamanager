@@ -4,10 +4,9 @@
 #include <sys/stat.h>
 #include <unistd.h>     // fork()
 #include <sys/wait.h>
-#include <sys/param.h>  // statfs()
-#include <sys/mount.h>  // "
 #include <xtend/proc.h> // xt_get_home_dir()
 #include <inttypes.h>   // PRIu64
+#include "statfs.h"
 #include "QShell.hpp"
 #include "QFormatMenu.hpp"
 #include "misc.h"
@@ -140,10 +139,10 @@ int     QShell::reformat(void)
 void    QShell::info(void)
 
 {
-    struct statfs   fs;
-    char            message[POPUP_MSG_MAX + 1];
+    statfs_t    fs;
+    char        message[POPUP_MSG_MAX + 1];
     
-    if ( statfs(mount_point, &fs) == 0 )
+    if ( STATFS(mount_point, &fs) == 0 )
     {
 	snprintf(message, POPUP_MSG_MAX + 1,
 		 "Mount point:\t%s\n"

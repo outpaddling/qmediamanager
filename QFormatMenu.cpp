@@ -14,7 +14,7 @@ QFormatMenu::QFormatMenu( char *new_mount_point, QWidget *parent  ) : QWidget(pa
 
 {
     QPushButton *exfat = new QPushButton("EXFAT (Windows and most Unix)", this),
-		*ufs2 = new QPushButton("UFS2 (FreeBSD)", this),
+		*ufs2 = new QPushButton("UFS2 (BSD)", this),
 		*ext4 = new QPushButton("EXT4 (Linux)", this);
 
     mount_point = new_mount_point;

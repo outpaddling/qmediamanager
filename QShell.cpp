@@ -22,10 +22,11 @@ void    QShell::setMount_point(char *new_mount_point)
 int     QShell::fm(void)
 
 {
-    // FIXME: Find a more robust way to select a file manager
+    // FIXME: Find a more robust way to select a file manager, e.g.
+    // list them in a config file that users can edit.
     // For now, check for likely add-ons first, then FMs that come
-    // with desktop environments
-    char    fms[][20] = { "pcmanfm-qt", "pcmanfm",
+    // with desktop environments.
+    char    fms[][20] = { "pcmanfm-qt", "pcmanfm", "qtfm", "4pane",
 			  "caja", "dolphin", "lumina-fm", "konqueror",
 			  "krusader", "nautilus", "nemo", "thunar", "" },
 	    *fm,

@@ -18,7 +18,6 @@ private slots:
 private:
     char    *mount_point;
     char    *device;
-    int     umount(void);
     void    format(const char *fs_type);
 
 };

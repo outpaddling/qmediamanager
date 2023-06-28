@@ -8,3 +8,5 @@
 enum { UMOUNT_OK, UMOUNT_FAILED };
 
 void    popup(const char *message);
+char    *get_device_name(const char *mount_point);
+int     umount(const char *mount_point);

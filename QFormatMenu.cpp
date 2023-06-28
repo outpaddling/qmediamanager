@@ -5,7 +5,6 @@
 #include <sys/wait.h>
 #include <sys/stat.h>
 #include <sysexits.h>
-#include "statfs.h"
 #include "QFormatMenu.hpp"
 #include "misc.h"
 
@@ -52,93 +51,26 @@ void    QFormatMenu::ext4(void)
 }
 
 
-// FIXME: Should this really be a member?
-
-int     QFormatMenu::umount(void)
-
-{
-    int     status;
-    char    message[POPUP_MSG_MAX + 1];
-    
-    if ( fork() == 0 )
-    {
-	execlp("npmount", "npmount", "umount", mount_point, NULL);
-	
-	// execlp() should not return
-	snprintf(message, POPUP_MSG_MAX + 1,
-		 "qmediamanager: exec failed: %s\n", strerror(errno));
-	popup(message);
-	return UMOUNT_FAILED;
-    }
-    else
-    {
-	wait(&status);
-	// popup() causes hang here ??
-	//snprintf(message, POPUP_MSG_MAX + 1,
-	//         "umount status = %d\n", status);
-	//popup(message);
-	if ( status == 0 )
-	    return UMOUNT_OK;
-	
-	snprintf(message, POPUP_MSG_MAX + 1,
-		 "qmediamanager: unmount failed: %s\n", strerror(errno));
-	popup(message);
-	return UMOUNT_FAILED;
-    }
-}
-
-
 void    QFormatMenu::format(const char *fs_type)
 
 {
-    statfs_t        fs;
-    char            message[POPUP_MSG_MAX + 1], *p;
-    int             status;
-    char            temp_file[PATH_MAX + 1] = "/tmp/qmed.XXXXXXX";
-    char            cmd[CMD_MAX + 1];
-    struct stat     st;
+    char    *device;
+    char    message[POPUP_MSG_MAX + 1];
+    char    temp_file[PATH_MAX + 1] = "/tmp/qmed.XXXXXXX";
+    int     status;
+    struct stat st;
     
-    if ( STATFS(mount_point, &fs) == 0 )
+    if ( mktemp(temp_file) == NULL )
     {
-	device = fs.f_mntfromname;
-	
-	// FIXME: This is a fragile hack that depends on the syntax of the
-	// lklfuse command.  Is there a better way to get the device name
-	// behind lklfuse?
-	if ( strcmp(device, "lklfuse") == 0 )
-	{
-	    FILE    *fp;
-	    
-	    snprintf(cmd, CMD_MAX + 1, 
-		    "ps axww | grep 'lklfuse.*%s' | grep -v grep | awk '{ print $(NF-1) }'",
-		    mount_point);
-	    fp = popen(cmd, "r");
-	    if ( fp == NULL )
-	    {
-		popup("Cannot determine lklfuse device name.");
-		exit(EX_SOFTWARE);
-	    }
-	    fgets(device, 20, fp);
-	    device[strlen(device)-1] = '\0';
-	    pclose(fp);
-	}
-	
-	// Remove partition such as "p1" or "s1"
-	for (p = device; !isdigit(*p) && *p != '\0'; ++p)
-	    ;
-	while ( isdigit(*p) )
-	    ++p;
-	*p = '\0';
-	
-	if ( mktemp(temp_file) == NULL )
-	{
-	    popup("Error generating temp file name.");
-	    exit(EX_SOFTWARE);
-	}
-	
+	popup("Error generating temp file name.");
+	exit(EX_SOFTWARE);
+    }
+
+    if ( (device = get_device_name(mount_point)) != NULL )
+    {
 	if ( fork() == 0 )
 	{
-	    if ( umount() == UMOUNT_OK )
+	    if ( umount(mount_point) == UMOUNT_OK )
 	    {
 		execlp("urxvt", "urxvt", "-e", "auto-media-format",
 			"--temp-file", temp_file,
@@ -167,6 +99,7 @@ void    QFormatMenu::format(const char *fs_type)
 		exit(EX_OK);
 	    }
 	}
+	free(device);
     }
     else
     {

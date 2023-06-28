@@ -6,10 +6,11 @@ class QShell : public QObject
 
 public slots:
     int     fm(void);
-    void    unmount(void);
     int     reformat(void);
     void    info(void);
     void    setMount_point(char *mount_point);
+    int     image(void);
+    void    unmount(void);
 
 private:
     char    *mount_point;

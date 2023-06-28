@@ -7,32 +7,35 @@
 #include "QMediaMenu.hpp"
 #include "misc.h"
 
-
 QMediaMenu::QMediaMenu( char *argv[], QWidget *parent  ) : QWidget(parent)
 
 {
     char    unmount_text[UNMOUNT_TEXT_MAX + 1];
-    
+
     mount_point = argv[1],
     snprintf(unmount_text, UNMOUNT_TEXT_MAX + 1, "Unmount %s", mount_point);
     
-    QPushButton *fm = new QPushButton("Open file manager", this),
-		*unmount = new QPushButton(unmount_text, this),
+    QPushButton *info = new QPushButton("Filesystem info", this),
+		*fm = new QPushButton("Open file manager", this),
 		*reformat = new QPushButton("Reformat device", this),
-		*info = new QPushButton("Filesystem info", this);
+		*image = new QPushButton("Copy image to device", this),
+		*unmount = new QPushButton(unmount_text, this);
     QShell      *shell = new QShell;
 
     shell->setMount_point(mount_point);
-    connect(fm, SIGNAL(clicked()), shell, SLOT(fm()));
-    connect(unmount, SIGNAL(clicked()), shell, SLOT(unmount()));
-    connect(reformat, SIGNAL(clicked()), shell, SLOT(reformat()));
     connect(info, SIGNAL(clicked()), shell, SLOT(info()));
+    connect(fm, SIGNAL(clicked()), shell, SLOT(fm()));
+    connect(reformat, SIGNAL(clicked()), shell, SLOT(reformat()));
+    connect(image, SIGNAL(clicked()), shell, SLOT(image()));
+    connect(unmount, SIGNAL(clicked()), shell, SLOT(unmount()));
     
     QVBoxLayout *layout = new QVBoxLayout;
-    layout->addWidget(fm);
-    layout->addWidget(unmount);
-    layout->addWidget(reformat);
     layout->addWidget(info);
+    layout->addWidget(fm);
+    layout->addWidget(reformat);
+    layout->addWidget(image);
+    layout->addWidget(unmount);
+    
     setLayout(layout);
 }
 

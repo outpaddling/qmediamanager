@@ -1,4 +1,5 @@
 #include <iostream>
+#include <QFileDialog>
 #include <stdlib.h>
 #include <sysexits.h>
 #include <sys/stat.h>
@@ -10,7 +11,6 @@
 #include "QShell.hpp"
 #include "QFormatMenu.hpp"
 #include "misc.h"
-
 
 void    QShell::setMount_point(char *new_mount_point)
 
@@ -125,11 +125,80 @@ void    QShell::unmount(void)
 }
 
 
+int     QShell::image(void)
+
+{
+    QString fileName;
+    char    temp_file[PATH_MAX + 1] = "/tmp/qmed.XXXXXXX";
+    char    *device;
+    char    message[POPUP_MSG_MAX + 1];
+    char    home_dir[PATH_MAX + 1];
+    int     status;
+    struct stat st;
+    
+    fileName = QFileDialog::getOpenFileName(nullptr,
+	tr("Open Image"), xt_get_home_dir(home_dir, PATH_MAX+1),
+	tr("Image Files (*.img *.iso)"));
+    if ( fileName.isNull() )
+	return EX_OK;
+    
+    if ( mktemp(temp_file) == NULL )
+    {
+	popup("Error generating temp file name.");
+	exit(EX_SOFTWARE);
+    }
+
+    if ( (device = get_device_name(mount_point)) != NULL )
+    {
+	if ( fork() == 0 )
+	{
+	    if ( umount(mount_point) == UMOUNT_OK )
+	    {
+		// FIXME: Use img2dev when it's more robust
+		execlp("urxvt", "urxvt", "-e", "img2dev",
+			"--success-file", temp_file,
+			fileName.toLocal8Bit().data(), device, NULL);
+	
+		// execlp() should not return
+		popup("exec failed.");
+	    }
+	    else
+		popup("Failed to unmount.");
+	}
+	else
+	{
+	    // FIXME: urxvt, xterm do not pass back exit status
+	    wait(&status);
+	    if ( stat(temp_file, &st) != 0 )
+	    {
+		popup("Image copy failed.");
+		exit(EX_UNAVAILABLE);
+	    }
+	    else
+	    {
+		popup("Image copy complete.  Disconnect and reconnect\n"
+		      "the device to mount the new filesystem.");
+		unlink(temp_file);
+		exit(EX_OK);
+	    }
+	}
+	free(device);
+    }
+    else
+    {
+	snprintf(message, POPUP_MSG_MAX + 1,
+		"%s is not mounted.  Cannot determine device name",
+		mount_point);
+	popup(message);
+    }
+    
+    return EX_OK;
+}
+
+
 int     QShell::reformat(void)
 
 {
-    // popup("Reformat is not yet implemented.");
-
     QFormatMenu *menu = new QFormatMenu(mount_point);
     menu->show();
 

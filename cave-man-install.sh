@@ -25,7 +25,7 @@ case $(uname) in
     PREFIX=$LOCALBASE
     export PREFIX LOCALBASE
     export LDFLAGS="-L. -L$LIBDIR -Wl,-rpath,$LIBDIR:/usr/lib:/lib"
-    export PATH=${PATH}:/usr/pkg/qt6/bin
+    export PATH=$HOME/Pkgsrc/pkg/gcc9/bin:${PATH}:$HOME/Pkgsrc/pkg/qt6/bin:/usr/pkg/qt6/bin
     ;;
 
 esac

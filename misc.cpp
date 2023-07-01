@@ -29,17 +29,18 @@ char    *get_device_name(const char *mount_point)
 	// FIXME: This is a fragile hack that depends on the syntax of the
 	// lklfuse command.  Is there a better way to get the device name
 	// behind lklfuse?
-	if ( strcmp(device, "lklfuse") == 0 )
+	if ( (strcmp(device, "lklfuse") == 0)
+	     || (strcmp(device, "/dev/puffs") == 0) )
 	{
 	    FILE    *fp;
 	    
 	    snprintf(cmd, CMD_MAX + 1, 
-		    "ps axww | grep 'lklfuse.*%s' | grep -v grep | awk '{ print $(NF-1) }'",
+		    "ps axww | grep 'mount.*%s' | grep -v grep | awk '{ print $(NF-1) }'",
 		    mount_point);
 	    fp = popen(cmd, "r");
 	    if ( fp == NULL )
 	    {
-		popup("Cannot determine lklfuse device name.");
+		popup("Cannot determine fusefs device name.");
 		exit(EX_SOFTWARE);
 	    }
 	    fgets(device, 20, fp);

@@ -154,8 +154,8 @@ int     QShell::image(void)
 	{
 	    if ( umount(mount_point) == UMOUNT_OK )
 	    {
-		// FIXME: Use img2dev when it's more robust
-		execlp("urxvt", "urxvt", "-e", "img2dev",
+		// FIXME: Use auto-image2dev when it's more robust
+		execlp("urxvt", "urxvt", "-e", "auto-image2dev",
 			"--success-file", temp_file,
 			fileName.toLocal8Bit().data(), device, NULL);
 	

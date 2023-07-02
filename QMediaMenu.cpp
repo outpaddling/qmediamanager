@@ -13,6 +13,9 @@ QMediaMenu::QMediaMenu( char *argv[], QWidget *parent  ) : QWidget(parent)
     char    unmount_text[UNMOUNT_TEXT_MAX + 1];
 
     mount_point = argv[1],
+    device = argv[2];
+    fs_type = argv[3];
+    
     snprintf(unmount_text, UNMOUNT_TEXT_MAX + 1, "Unmount %s", mount_point);
     
     QPushButton *info = new QPushButton("Filesystem info", this),

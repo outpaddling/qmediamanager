@@ -15,6 +15,8 @@ protected:
 
 private:
     char    *mount_point;
+    char    *device;
+    char    *fs_type;
 
 };
 

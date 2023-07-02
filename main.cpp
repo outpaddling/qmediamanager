@@ -8,7 +8,7 @@ void    usage(char *argv[])
 
 {
     // FIXME: Display error popup window
-    fprintf(stderr, "Usage: %s /mount/point\n", argv[0]);
+    fprintf(stderr, "Usage: %s /mount/point device fs-type\n", argv[0]);
     exit(EX_USAGE);
 }
 
@@ -18,7 +18,7 @@ int     main(int argc, char *argv[])
 {
     QApplication app(argc, argv);
     
-    if ( argc != 2 )
+    if ( argc != 4 )
 	usage(argv);
     
     QMediaMenu *menu = new QMediaMenu(argv);

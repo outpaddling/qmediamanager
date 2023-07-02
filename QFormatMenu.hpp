@@ -8,7 +8,8 @@ class QFormatMenu : public QWidget
     Q_OBJECT
 
 public:
-    QFormatMenu( char *new_mount_point = 0, QWidget *parent = 0 );
+    QFormatMenu(char *new_mount_point = 0, char *new_device = 0,
+		QWidget *parent = 0 );
 
 private slots:
     void    exfat(void);

@@ -15,50 +15,25 @@ void    popup(const char *message)
 }
 
 
-char    *get_device_name(const char *mount_point)
+char    *get_parent_device_name(const char *partition)
 
 {
-    statfs_t    fs;
     char        *device, *p;
-    char        cmd[CMD_MAX + 1];
-    
-    if ( STATFS(mount_point, &fs) == 0 )
+
+    device = strdup(partition);
+
+    if ( device != NULL )
     {
-	device = strdup(fs.f_mntfromname);
-	
-	// FIXME: This is a fragile hack that depends on the syntax of the
-	// lklfuse command.  Is there a better way to get the device name
-	// behind lklfuse?
-	if ( (strcmp(device, "lklfuse") == 0)
-	     || (strcmp(device, "/dev/puffs") == 0) )
-	{
-	    FILE    *fp;
-	    
-	    snprintf(cmd, CMD_MAX + 1, 
-		    "ps axww | grep 'mount.*%s' | grep -v grep | awk '{ print $(NF-1) }'",
-		    mount_point);
-	    fp = popen(cmd, "r");
-	    if ( fp == NULL )
-	    {
-		popup("Cannot determine fusefs device name.");
-		exit(EX_SOFTWARE);
-	    }
-	    fgets(device, 20, fp);
-	    device[strlen(device)-1] = '\0';
-	    pclose(fp);
-	}
-	
-	// Remove partition such as "p1" or "s1"
+	// Strip off everything after the first number, e.g.
+	// sd0a -> sd0, da0p1 -> da0
 	for (p = device; !isdigit(*p) && *p != '\0'; ++p)
 	    ;
 	while ( isdigit(*p) )
 	    ++p;
 	*p = '\0';
-
-	return device;
     }
-    else
-	return NULL;
+    
+    return device;
 }
 
 

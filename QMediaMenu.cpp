@@ -12,6 +12,12 @@ QMediaMenu::QMediaMenu( char *argv[], QWidget *parent  ) : QWidget(parent)
 {
     char    unmount_text[UNMOUNT_TEXT_MAX + 1];
 
+    /*
+     *  fusefs obscures the device name and fs type in many cases,
+     *  so we require that info from the command-line, typically
+     *  sent by the same tool that performed the mount.
+     */
+    
     mount_point = argv[1],
     device = argv[2];
     fs_type = argv[3];
@@ -26,6 +32,9 @@ QMediaMenu::QMediaMenu( char *argv[], QWidget *parent  ) : QWidget(parent)
     QShell      *shell = new QShell;
 
     shell->setMount_point(mount_point);
+    shell->setDevice(device);
+    shell->setFs_type(fs_type);
+    
     connect(info, SIGNAL(clicked()), shell, SLOT(info()));
     connect(fm, SIGNAL(clicked()), shell, SLOT(fm()));
     connect(reformat, SIGNAL(clicked()), shell, SLOT(reformat()));

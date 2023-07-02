@@ -12,10 +12,25 @@
 #include "QFormatMenu.hpp"
 #include "misc.h"
 
+
 void    QShell::setMount_point(char *new_mount_point)
 
 {
     mount_point = new_mount_point;
+}
+
+
+void    QShell::setDevice(char *new_device)
+
+{
+    device = new_device;
+}
+
+
+void    QShell::setFs_type(char *new_fs_type)
+
+{
+    fs_type = new_fs_type;
 }
 
 
@@ -130,7 +145,7 @@ int     QShell::image(void)
 {
     QString fileName;
     char    temp_file[PATH_MAX + 1] = "/tmp/qmed.XXXXXXX";
-    char    *device;
+    char    *parent_device;
     char    message[POPUP_MSG_MAX + 1];
     char    home_dir[PATH_MAX + 1];
     int     status;
@@ -148,7 +163,7 @@ int     QShell::image(void)
 	exit(EX_SOFTWARE);
     }
 
-    if ( (device = get_device_name(mount_point)) != NULL )
+    if ( (parent_device = get_parent_device_name(device)) != NULL )
     {
 	if ( fork() == 0 )
 	{
@@ -157,7 +172,7 @@ int     QShell::image(void)
 		// FIXME: Use auto-image2dev when it's more robust
 		execlp("urxvt", "urxvt", "-e", "auto-image2dev",
 			"--success-file", temp_file,
-			fileName.toLocal8Bit().data(), device, NULL);
+			fileName.toLocal8Bit().data(), parent_device, NULL);
 	
 		// execlp() should not return
 		popup("exec failed.");
@@ -182,13 +197,12 @@ int     QShell::image(void)
 		exit(EX_OK);
 	    }
 	}
-	free(device);
+	free(parent_device);
     }
     else
     {
 	snprintf(message, POPUP_MSG_MAX + 1,
-		"%s is not mounted.  Cannot determine device name",
-		mount_point);
+		"%s: Cannot determine parent device name", device);
 	popup(message);
     }
     
@@ -199,7 +213,7 @@ int     QShell::image(void)
 int     QShell::reformat(void)
 
 {
-    QFormatMenu *menu = new QFormatMenu(mount_point);
+    QFormatMenu *menu = new QFormatMenu(mount_point, device);
     menu->show();
 
     return EX_OK;
@@ -221,9 +235,9 @@ void    QShell::info(void)
 		 "Total:\t%10.2f GB  (%10.2f GiB)\n"
 		 "Used:\t%10.2f GB  (%10.2f GiB)\n"
 		 "Available:\t%10.2f GB  (%10.2f GiB)",
-		 fs.f_mntonname,
-		 fs.f_fstypename,
-		 fs.f_mntfromname,
+		 fs.f_mntonname,    // From CLI
+		 fs_type,           // Frmo CLI
+		 device,
 		 fs.f_blocks * fs.f_bsize / 1000000000.0,
 		 fs.f_blocks * fs.f_bsize / GIB,
 		 (fs.f_blocks - fs.f_bfree) * fs.f_bsize / 1000000000.0,

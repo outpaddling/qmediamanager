@@ -9,7 +9,8 @@
 #include "misc.h"
 
 
-QFormatMenu::QFormatMenu( char *new_mount_point, QWidget *parent  ) : QWidget(parent)
+QFormatMenu::QFormatMenu(char *new_mount_point, char *new_device,
+			 QWidget *parent  ) : QWidget(parent)
 
 {
     QPushButton *exfat = new QPushButton("EXFAT (Windows and most Unix)", this),
@@ -17,6 +18,7 @@ QFormatMenu::QFormatMenu( char *new_mount_point, QWidget *parent  ) : QWidget(pa
 		*ext4 = new QPushButton("EXT4 (Linux)", this);
 
     mount_point = new_mount_point;
+    device = new_device;
     
     connect(exfat, SIGNAL(clicked()), this, SLOT(exfat()));
     connect(ufs2, SIGNAL(clicked()), this, SLOT(ufs2()));
@@ -54,7 +56,7 @@ void    QFormatMenu::ext4(void)
 void    QFormatMenu::format(const char *fs_type)
 
 {
-    char    *device;
+    char    *parent_device;
     char    message[POPUP_MSG_MAX + 1];
     char    temp_file[PATH_MAX + 1] = "/tmp/qmed.XXXXXXX";
     int     status;
@@ -66,7 +68,7 @@ void    QFormatMenu::format(const char *fs_type)
 	exit(EX_SOFTWARE);
     }
 
-    if ( (device = get_device_name(mount_point)) != NULL )
+    if ( (parent_device = get_parent_device_name(device)) != NULL )
     {
 	if ( fork() == 0 )
 	{
@@ -74,7 +76,7 @@ void    QFormatMenu::format(const char *fs_type)
 	    {
 		execlp("urxvt", "urxvt", "-e", "auto-media-format",
 			"--temp-file", temp_file,
-			device, fs_type, NULL);
+			parent_device, fs_type, NULL);
 	
 		// execlp() should not return
 		popup("exec failed.");
@@ -99,13 +101,12 @@ void    QFormatMenu::format(const char *fs_type)
 		exit(EX_OK);
 	    }
 	}
-	free(device);
+	free(parent_device);
     }
     else
     {
 	snprintf(message, POPUP_MSG_MAX + 1,
-		"%s is not mounted.  Cannot determine device name",
-		mount_point);
+		"%s: Cannot determine parent device name", device);
 	popup(message);
     }
 }

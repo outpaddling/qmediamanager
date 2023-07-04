@@ -95,8 +95,7 @@ void    QFormatMenu::format(const char *fs_type)
 	    }
 	    else
 	    {
-		popup("Format complete.  Disconnect and reconnect\n"
-		      "the device to mount the new filesystem.");
+		popup("Format complete." RECONNECT_MSG);
 		unlink(temp_file);
 		exit(EX_OK);
 	    }

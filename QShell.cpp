@@ -191,8 +191,7 @@ int     QShell::image(void)
 	    }
 	    else
 	    {
-		popup("Image copy complete.  Disconnect and reconnect\n"
-		      "the device to mount the new filesystem.");
+		popup("Copy complete." RECONNECT_MSG);
 		unlink(temp_file);
 		exit(EX_OK);
 	    }

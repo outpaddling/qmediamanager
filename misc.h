@@ -4,6 +4,9 @@
 #define CMD_MAX             1024
 #define GIB                 (1024.0 * 1024.0 * 1024.0)
 #define PREFIX              "/usr/local"
+#define RECONNECT_MSG       "  If the new filesystem does\n" \
+			    "not mount immediately, disconnect and reconnect\n" \
+			    "the device to trigger automount."
 
 enum { UMOUNT_OK, UMOUNT_FAILED };
 

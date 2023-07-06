@@ -1,3 +1,6 @@
 
-Add a disk info menu item (present info from statfs())
+Classes are poorly organized and need to be reimagined.
+
+Code needs cleanup and documentation.
+
 

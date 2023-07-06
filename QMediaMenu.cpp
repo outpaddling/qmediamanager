@@ -29,7 +29,7 @@ QMediaMenu::QMediaMenu( char *argv[], QWidget *parent  ) : QWidget(parent)
 		 "%s does not contain a recognized filesystem.  Run\n\n"
 		 "    auto-media-format %s fs-type\n\n"
 		 "to format it if you wish.  It may also be possible to\n"
-		 "mount manually using fusefs tools that are not currently"
+		 "mount manually using fusefs tools that are not currently\n"
 		 "integrated into this automount system.",
 		 device, get_parent_device_name(device));
 	popup(message);

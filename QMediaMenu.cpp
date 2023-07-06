@@ -10,8 +10,9 @@
 QMediaMenu::QMediaMenu( char *argv[], QWidget *parent  ) : QWidget(parent)
 
 {
-    char    unmount_text[UNMOUNT_TEXT_MAX + 1];
-
+    char    unmount_text[UNMOUNT_TEXT_MAX + 1],
+	    message[POPUP_MSG_MAX + 1];
+	    
     /*
      *  fusefs obscures the device name and fs type in many cases,
      *  so we require that info from the command-line, typically
@@ -21,6 +22,19 @@ QMediaMenu::QMediaMenu( char *argv[], QWidget *parent  ) : QWidget(parent)
     mount_point = argv[1],
     device = argv[2];
     fs_type = argv[3];
+    
+    if ( strcmp(fs_type, "unknown") == 0 )
+    {
+	snprintf(message, POPUP_MSG_MAX + 1,
+		 "%s does not contain a recognized filesystem.  Run\n\n"
+		 "    auto-media-format %s fs-type\n\n"
+		 "to format it if you wish.  It may also be possible to\n"
+		 "mount manually using fusefs tools that are not currently"
+		 "integrated into this automount system.",
+		 device, get_parent_device_name(device));
+	popup(message);
+	exit(EX_OK);
+    }
     
     snprintf(unmount_text, UNMOUNT_TEXT_MAX + 1, "Unmount %s", mount_point);
     

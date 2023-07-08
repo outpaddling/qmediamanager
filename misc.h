@@ -1,12 +1,11 @@
 
-#define POPUP_MSG_MAX       256
+#define POPUP_MSG_MAX       1024
 #define UNMOUNT_TEXT_MAX    64
 #define CMD_MAX             1024
 #define GIB                 (1024.0 * 1024.0 * 1024.0)
 #define PREFIX              "/usr/local"
-#define RECONNECT_MSG       "  If the new filesystem does\n" \
-			    "not mount immediately, disconnect and reconnect\n" \
-			    "the device to trigger automount."
+#define RECONNECT_MSG       "  You may need to disconnect and\n" \
+			    "reconnect the device to mount all new filesystems."
 
 enum { UMOUNT_OK, UMOUNT_FAILED };
 

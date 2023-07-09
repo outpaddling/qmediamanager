@@ -11,6 +11,8 @@ QMediaMenu::QMediaMenu( char *argv[], QWidget *parent  ) : QWidget(parent)
 
 {
     char    unmount_text[UNMOUNT_TEXT_MAX + 1],
+	    image_text[IMAGE_TEXT_MAX + 1],
+	    format_text[FORMAT_TEXT_MAX + 1],
 	    message[POPUP_MSG_MAX + 1];
 	    
     /*
@@ -33,17 +35,21 @@ QMediaMenu::QMediaMenu( char *argv[], QWidget *parent  ) : QWidget(parent)
 		 "any important information, you can reformat it using\n\n"
 		 "    auto-media-format %s fs-type\n\n"
 		 "if you wish.",
-		 device, get_parent_device_name(device));
+		 device, parent_device_name(device));
 	popup(message);
 	exit(EX_OK);
     }
     
+    snprintf(format_text, FORMAT_TEXT_MAX + 1, "Reformat %s",
+	     parent_device_name(device));
+    snprintf(image_text, IMAGE_TEXT_MAX + 1, "Copy disk image to %s",
+	     parent_device_name(device));
     snprintf(unmount_text, UNMOUNT_TEXT_MAX + 1, "Unmount %s", mount_point);
     
     QPushButton *info = new QPushButton("Filesystem info", this),
 		*fm = new QPushButton("Open file manager", this),
-		*reformat = new QPushButton("Reformat device", this),
-		*image = new QPushButton("Copy image to device", this),
+		*reformat = new QPushButton(format_text, this),
+		*image = new QPushButton(image_text, this),
 		*unmount = new QPushButton(unmount_text, this);
     QShell      *shell = new QShell;
 

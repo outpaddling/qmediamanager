@@ -15,7 +15,7 @@ void    popup(const char *message)
 }
 
 
-char    *get_parent_device_name(const char *partition)
+char    *parent_device_name(const char *partition)
 
 {
     char        *device, *p;

@@ -163,7 +163,7 @@ int     QShell::image(void)
 	exit(EX_SOFTWARE);
     }
 
-    if ( (parent_device = get_parent_device_name(device)) != NULL )
+    if ( (parent_device = parent_device_name(device)) != NULL )
     {
 	if ( fork() == 0 )
 	{

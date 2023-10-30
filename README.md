@@ -57,6 +57,6 @@ QMediaManager presents the following options:
 
 5.  Unmount: Unmounts the mount point associated with the window, using
     "npmount umount /mount/point".  See npmount(1) or
-    https://github.com/outpaddling/npmount[](https://github.com/outpaddling/npmount)
+    [https://github.com/outpaddling/npmount](https://github.com/outpaddling/npmount)
     for more information.
 

@@ -56,5 +56,7 @@ QMediaManager presents the following options:
     bootable live thumb drives, etc.
 
 5.  Unmount: Unmounts the mount point associated with the window, using
-    "npmount umount /mount/point".  See npmount(1) for more information.
+    "npmount umount /mount/point".  See npmount(1) or
+    https://github.com/outpaddling/npmount[](https://github.com/outpaddling/npmount)
+    for more information.
 

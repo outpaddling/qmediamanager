@@ -4,7 +4,7 @@
 
 QMediaManager is a desktop-agnostic
 GUI application for managing removable media.  It is
-meant to be launched by an automount service such as FreeBSD's
+meant to be launched by an auto-mount service such as FreeBSD's
 sysutils/devd-mount, to present options to the user when removable media
 are inserted.
 

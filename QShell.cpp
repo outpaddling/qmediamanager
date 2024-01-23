@@ -224,25 +224,33 @@ void    QShell::info(void)
 {
     statfs_t    fs;
     char        message[POPUP_MSG_MAX + 1];
+    uint64_t    total_blocks, used_blocks, free_blocks, block_size;
     
     if ( STATFS(mount_point, &fs) == 0 )
     {
+	total_blocks = fs.f_blocks;
+	free_blocks = fs.f_bfree;
+	used_blocks = total_blocks - free_blocks;
+	block_size = fs.f_bsize;
+	
 	snprintf(message, POPUP_MSG_MAX + 1,
 		 "Mount point:\t%s\n"
 		 "Filesystem:\t%s\n"
 		 "Device:\t%s\n"
 		 "Total:\t%10.2f GB  (%10.2f GiB)\n"
-		 "Used:\t%10.2f GB  (%10.2f GiB)\n"
-		 "Available:\t%10.2f GB  (%10.2f GiB)",
+		 "Used:\t%10.2f GB  (%10.2f GiB,  %4.1f%%)\n"
+		 "Available:\t%10.2f GB  (%10.2f GiB,  %4.1f%%)\n",
 		 fs.f_mntonname,    // From CLI
 		 fs_type,           // Frmo CLI
 		 device,
-		 fs.f_blocks * fs.f_bsize / 1000000000.0,
-		 fs.f_blocks * fs.f_bsize / GIB,
-		 (fs.f_blocks - fs.f_bfree) * fs.f_bsize / 1000000000.0,
-		 (fs.f_blocks - fs.f_bfree) * fs.f_bsize / GIB,
-		 fs.f_bavail * fs.f_bsize / 1000000000.0,
-		 fs.f_bavail * fs.f_bsize / GIB );
+		 total_blocks * block_size / 1000000000.0,
+		 total_blocks * block_size / GIB,
+		 used_blocks * block_size / 1000000000.0,
+		 used_blocks * block_size / GIB,
+		 100.0 * used_blocks / total_blocks,
+		 free_blocks * block_size / 1000000000.0,
+		 free_blocks * block_size / GIB,
+		 100.0 * free_blocks / total_blocks);
 	popup(message);
     }
     else

@@ -5,14 +5,21 @@
 QMediaManager is a desktop-agnostic
 GUI application for managing removable media.  It is
 meant to be launched by an auto-mount service such as FreeBSD's
-sysutils/devd-mount, to present options to the user when removable media
-are inserted.
+sysutils/devd-mount or NetBSD's devpub-mount, to present options to
+the user when removable media are inserted.
+
+As most media are attached via USB and similar bus connections (which
+cannot be physically locked while mounted), it is
+the responsibility of the user to unmount the media before unplugging it.
+The QMediaManager popup menu is meant to serve as a reminder that
+something is mounted and should not be unplugged.
 
 [Screenshot](https://github.com/outpaddling/qmediamanager/blob/main/qmediamanager.png "Screenshot")
 
 ## Description
 
-QMediaManager presents the following options:
+For each filesystem detected on newly attached media,
+QMediaManager displays a popup menu with the following options:
 
 1.  Filesystem info: Shows the mount point, filesystem type, device, and
     basic statistics on the associated filesystem.

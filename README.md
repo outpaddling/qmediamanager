@@ -15,6 +15,7 @@ The QMediaManager popup menu is meant to serve as a reminder that
 something is mounted and should not be unplugged.
 
 [Screenshot](https://github.com/outpaddling/qmediamanager/blob/main/qmediamanager.png "Screenshot")
+[Screenshot](https://github.com/outpaddling/qmediamanager/blob/main/qmediamanager-fs.png "Screenshot")
 
 ## Description
 
